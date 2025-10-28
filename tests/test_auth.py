@@ -142,3 +142,29 @@ def test_find_user_by_username():
     # Поиск несуществующего пользователя
     nonexistent = auth_service.find_by_username("nonexistent")
     assert nonexistent is None
+def test_complete_user_lifecycle():
+    from src.auth import AuthService
+    
+    auth_service = AuthService()
+    
+    # 1. Регистрация
+    user = auth_service.register("lifecycle_user", "initial_pass", "lifecycle@example.com")
+    assert user.username == "lifecycle_user"
+    
+    # 2. Вход
+    logged_in_user = auth_service.login("lifecycle_user", "initial_pass")
+    assert logged_in_user.username == "lifecycle_user"
+    
+    # 3. Смена пароля
+    auth_service.change_password("lifecycle_user", "initial_pass", "new_strong_pass")
+    
+    # 4. Повторный вход с новым паролем
+    relogged_user = auth_service.login("lifecycle_user", "new_strong_pass")
+    assert relogged_user.username == "lifecycle_user"
+    
+    # 5. Удаление аккаунта
+    auth_service.delete_account("lifecycle_user", "new_strong_pass")
+    
+    # 6. Проверка, что аккаунт удален
+    with pytest.raises(InvalidCredentialsException):
+        auth_service.login("lifecycle_user", "new_strong_pass")
