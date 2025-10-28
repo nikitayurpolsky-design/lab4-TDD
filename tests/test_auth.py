@@ -26,3 +26,22 @@ def test_register_duplicate_username_should_fail():
     
     with pytest.raises(UsernameAlreadyExists):
         auth_service.register("duplicate_user", "pass456", "test2@example.com")
+ 
+from src.exceptions import WeakPasswordException
+def test_register_with_short_password_should_fail():
+    from src.auth import AuthService
+    
+    auth_service = AuthService()
+    
+    with pytest.raises(WeakPasswordException):
+        auth_service.register("short_pass_user", "123", "test@example.com")
+
+from src.exceptions import InvalidEmailException
+
+def test_register_with_invalid_email_should_fail():
+    from src.auth import AuthService
+    
+    auth_service = AuthService()
+    
+    with pytest.raises(InvalidEmailException):
+        auth_service.register("invalid_email_user", "password123", "invalid-email")
