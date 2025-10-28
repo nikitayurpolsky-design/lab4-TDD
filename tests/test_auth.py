@@ -55,3 +55,14 @@ def test_login_success():
     
     assert user.username == "login_user"
     assert user.email == "login@example.com"
+
+from src.exceptions import InvalidCredentialsException
+
+def test_login_with_wrong_password_should_fail():
+    from src.auth import AuthService
+    
+    auth_service = AuthService()
+    auth_service.register("wrong_pass_user", "password123", "test@example.com")
+    
+    with pytest.raises(InvalidCredentialsException):
+        auth_service.login("wrong_pass_user", "wrong_password")
