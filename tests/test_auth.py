@@ -117,3 +117,28 @@ def test_delete_account_success():
     # Проверяем, что вход невозможен
     with pytest.raises(InvalidCredentialsException):
         auth_service.login("delete_user", "password123")
+def test_password_is_hashed_in_storage():
+    from src.auth import AuthService
+    
+    auth_service = AuthService()
+    user = auth_service.register("hashed_user", "password123", "test@example.com")
+    
+    # Пароль в хранилище должен быть хешированным (не исходным)
+    stored_user = auth_service.users["hashed_user"]
+    assert stored_user.password != "password123"
+    # Проверяем, что пароль представляет собой хеш (шестнадцатеричная строка)
+    assert len(stored_user.password) == 64  # Длина SHA-256 хеша
+    assert all(c in '0123456789abcdef' for c in stored_user.password)
+def test_find_user_by_username():
+    from src.auth import AuthService
+    
+    auth_service = AuthService()
+    auth_service.register("find_user", "password123", "find@example.com")
+    
+    user = auth_service.find_by_username("find_user")
+    assert user.username == "find_user"
+    assert user.email == "find@example.com"
+    
+    # Поиск несуществующего пользователя
+    nonexistent = auth_service.find_by_username("nonexistent")
+    assert nonexistent is None
