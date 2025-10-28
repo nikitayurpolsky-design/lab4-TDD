@@ -66,3 +66,10 @@ def test_login_with_wrong_password_should_fail():
     
     with pytest.raises(InvalidCredentialsException):
         auth_service.login("wrong_pass_user", "wrong_password")
+def test_login_with_nonexistent_username_should_fail():
+    from src.auth import AuthService
+    
+    auth_service = AuthService()
+    
+    with pytest.raises(InvalidCredentialsException):
+        auth_service.login("nonexistent_user", "password123")
