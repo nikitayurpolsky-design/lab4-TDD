@@ -63,3 +63,10 @@ class AuthService:
         user = User(username, password, email)
         self.users[username] = user
         return user
+    
+    def login(self, username, password):
+        if username in self.users:
+            user = self.users[username]
+            if user.password == password:
+                return user
+        return None        

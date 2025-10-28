@@ -45,3 +45,13 @@ def test_register_with_invalid_email_should_fail():
     
     with pytest.raises(InvalidEmailException):
         auth_service.register("invalid_email_user", "password123", "invalid-email")
+def test_login_success():
+    from src.auth import AuthService
+    
+    auth_service = AuthService()
+    auth_service.register("login_user", "password123", "login@example.com")
+    
+    user = auth_service.login("login_user", "password123")
+    
+    assert user.username == "login_user"
+    assert user.email == "login@example.com"
