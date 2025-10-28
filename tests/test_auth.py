@@ -4,8 +4,13 @@ def test_create_user_with_valid_data():
     user = User("test_user", "password123", "test@example.com")
     
     assert user.username == "test_user"
-    assert user.password == "password123"
     assert user.email == "test@example.com"
+    # Пароль теперь должен быть хешированным, а не исходным
+    assert user.password != "password123"  # Пароль не должен быть в открытом виде
+    assert len(user.password) == 64  # Должен быть SHA-256 хеш
+    # Проверяем, что у пользователя есть соль
+    assert hasattr(user, 'salt')
+    assert len(user.salt) == 32  # Соль должна быть 16 байт в hex (32 символа)
     
 def test_register_new_user_success():
     from src.auth import AuthService
