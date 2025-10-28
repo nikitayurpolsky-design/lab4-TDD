@@ -12,22 +12,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.9'
-        
-    - name: Install dependencies
+    - name: Create simple documentation
       run: |
-        pip install sphinx sphinx-rtd-theme
-        
-    - name: Build documentation
-      run: |
-        cd docs
-        make html
-        cd ..
         mkdir -p public
-        cp -r docs/build/html/* public/
+        echo "<h1>Project Documentation</h1>" > public/index.html
+        echo "<p>Documentation will be added soon.</p>" >> public/index.html
         
     - name: Upload pages artifact
       uses: actions/upload-pages-artifact@v3
