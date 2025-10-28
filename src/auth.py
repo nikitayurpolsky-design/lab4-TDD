@@ -110,3 +110,6 @@ class AuthService:
         
         user = self.login(username, old_password)
         user.password = new_password
+    def delete_account(self, username, password):
+        self.login(username, password)  # Проверяем пароль
+        del self.users[username]  # Удаляем пользователя

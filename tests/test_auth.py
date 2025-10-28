@@ -105,3 +105,15 @@ def test_change_password_with_weak_new_password_should_fail():
     
     with pytest.raises(WeakPasswordException):
         auth_service.change_password("weak_new_pass_user", "old_strong_pass", "123")
+def test_delete_account_success():
+    from src.auth import AuthService
+    
+    auth_service = AuthService()
+    auth_service.register("delete_user", "password123", "test@example.com")
+    
+    # Удаляем аккаунт
+    auth_service.delete_account("delete_user", "password123")
+    
+    # Проверяем, что вход невозможен
+    with pytest.raises(InvalidCredentialsException):
+        auth_service.login("delete_user", "password123")
