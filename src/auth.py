@@ -104,3 +104,9 @@ class AuthService:
     def change_password(self, username, old_password, new_password):
         user = self.login(username, old_password)  # Проверяем старый пароль
         user.password = new_password  # Меняем на новый
+    def change_password(self, username, old_password, new_password):
+        if len(new_password) < self.MIN_PASSWORD_LENGTH:
+            raise WeakPasswordException(f"Password must be at least {self.MIN_PASSWORD_LENGTH} characters")
+        
+        user = self.login(username, old_password)
+        user.password = new_password

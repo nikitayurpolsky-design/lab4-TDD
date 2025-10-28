@@ -97,3 +97,11 @@ def test_change_password_with_wrong_old_password_should_fail():
     
     with pytest.raises(InvalidCredentialsException):
         auth_service.change_password("wrong_old_pass_user", "wrong_old", "new_password")
+def test_change_password_with_weak_new_password_should_fail():
+    from src.auth import AuthService
+    
+    auth_service = AuthService()
+    auth_service.register("weak_new_pass_user", "old_strong_pass", "test@example.com")
+    
+    with pytest.raises(WeakPasswordException):
+        auth_service.change_password("weak_new_pass_user", "old_strong_pass", "123")
