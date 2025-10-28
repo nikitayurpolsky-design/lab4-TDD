@@ -73,3 +73,19 @@ def test_login_with_nonexistent_username_should_fail():
     
     with pytest.raises(InvalidCredentialsException):
         auth_service.login("nonexistent_user", "password123")
+def test_change_password_success():
+    from src.auth import AuthService
+    
+    auth_service = AuthService()
+    auth_service.register("change_pass_user", "old_password", "test@example.com")
+    
+    # Меняем пароль
+    auth_service.change_password("change_pass_user", "old_password", "new_password")
+    
+    # Проверяем, что старый пароль не работает
+    with pytest.raises(InvalidCredentialsException):
+        auth_service.login("change_pass_user", "old_password")
+    
+    # Проверяем, что новый пароль работает
+    user = auth_service.login("change_pass_user", "new_password")
+    assert user.username == "change_pass_user"

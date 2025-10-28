@@ -101,3 +101,6 @@ class AuthService:
             raise InvalidCredentialsException("Invalid username or password")
         
         return user
+    def change_password(self, username, old_password, new_password):
+        user = self.login(username, old_password)  # Проверяем старый пароль
+        user.password = new_password  # Меняем на новый
