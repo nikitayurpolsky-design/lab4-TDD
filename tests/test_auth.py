@@ -6,6 +6,7 @@ def test_create_user_with_valid_data():
     assert user.username == "test_user"
     assert user.password == "password123"
     assert user.email == "test@example.com"
+    
 def test_register_new_user_success():
     from src.auth import AuthService
     
@@ -14,3 +15,14 @@ def test_register_new_user_success():
     
     assert user.username == "new_user"
     assert user.email == "user@example.com"
+import pytest
+from src.exceptions import UsernameAlreadyExists
+
+def test_register_duplicate_username_should_fail():
+    from src.auth import AuthService
+    
+    auth_service = AuthService()
+    auth_service.register("duplicate_user", "pass123", "test1@example.com")
+    
+    with pytest.raises(UsernameAlreadyExists):
+        auth_service.register("duplicate_user", "pass456", "test2@example.com")
