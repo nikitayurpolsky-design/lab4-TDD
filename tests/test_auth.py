@@ -89,3 +89,11 @@ def test_change_password_success():
     # Проверяем, что новый пароль работает
     user = auth_service.login("change_pass_user", "new_password")
     assert user.username == "change_pass_user"
+def test_change_password_with_wrong_old_password_should_fail():
+    from src.auth import AuthService
+    
+    auth_service = AuthService()
+    auth_service.register("wrong_old_pass_user", "correct_old", "test@example.com")
+    
+    with pytest.raises(InvalidCredentialsException):
+        auth_service.change_password("wrong_old_pass_user", "wrong_old", "new_password")
